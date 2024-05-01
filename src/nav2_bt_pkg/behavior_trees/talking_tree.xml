@@ -1,0 +1,9 @@
+<root BTCPP_format="4" main_tree_to_execute="MainTree">
+    <BehaviorTree ID="MainTree">
+        <PipelineSequence name="BasicPipeline">
+            <Wait wait_duration="1.0" />
+            <Wait wait_duration="1.0" />
+            <Wait wait_duration="1.0" />
+        </PipelineSequence>
+    </BehaviorTree>
+</root>
