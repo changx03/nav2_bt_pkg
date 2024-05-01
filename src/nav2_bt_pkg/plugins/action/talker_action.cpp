@@ -1,39 +1,46 @@
-#include "nav2_bt_pkg/plugins/action/talker_action.hpp"
+#include "nav2_behavior_tree/bt_action_node.hpp"
+#include "nav2_msgs/action/dummy_behavior.hpp"
 
-#include "rclcpp/rclcpp.hpp"
+#include <memory>
+#include <string>
 
-namespace nav2_bt_pkg
+namespace nav2_behavior_tree
 {
 
-TalkerAction::TalkerAction(const std::string& xml_tag_name, const std::string& action_name, const BT::NodeConfiguration& conf)
-    : BtActionNode<nav2_msgs::action::DummyBehavior>(xml_tag_name, action_name, conf),
-      initialized_(false)
+class TalkerAction : public BtActionNode<nav2_msgs::action::DummyBehavior>
 {
-}
+  public:
+    TalkerAction(const std::string& xml_tag_name, const std::string& action_name, const BT::NodeConfiguration& conf)
+        : BtActionNode(xml_tag_name, action_name, conf)
+    {
+    }
 
-void TalkerAction::initialize()
-{
-    initialized_ = true;
-}
+    void on_tick() override
+    {
+        std::string msg;
+        getInput("msg", msg);
+        RCLCPP_INFO(node_->get_logger(), msg.c_str());
+    }
 
-void TalkerAction::on_tick()
-{
-    if(!initialized_) { initialize(); }
+    static BT::PortsList providedPorts()
+    {
+        return providedBasicPorts({BT::InputPort<std::string>("msg")});
+    }
 
-    std::string msg;
-    getInput("msg", msg);
+  private:
+};
 
-    RCLCPP_INFO_STREAM(node_->get_logger(), msg);
-}
-
-} // namespace nav2_bt_pkg
+} // namespace nav2_behavior_tree
 
 #include "behaviortree_cpp_v3/bt_factory.h"
 
 BT_REGISTER_NODES(factory)
 {
     BT::NodeBuilder builder = [](const std::string& name, const BT::NodeConfiguration& config)
-    { return std::make_unique<nav2_bt_pkg::TalkerAction>(name, "talker", config); };
+    {
+        // This action_name must be in the ServerHandler
+        return std::make_unique<nav2_behavior_tree::TalkerAction>(name, "talker", config);
+    };
 
-    factory.registerBuilder<nav2_bt_pkg::TalkerAction>("Talker", builder);
+    factory.registerBuilder<nav2_behavior_tree::TalkerAction>("Talker", builder);
 }

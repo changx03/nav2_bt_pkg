@@ -40,6 +40,9 @@ ServerHandler::ServerHandler()
     backup_server = std::make_unique<DummyActionServer<nav2_msgs::action::BackUp>>(node_, "backup");
     drive_on_heading_server = std::make_unique<DummyActionServer<nav2_msgs::action::DriveOnHeading>>(node_, "drive_on_heading");
     ntp_server = std::make_unique<DummyActionServer<nav2_msgs::action::ComputePathThroughPoses>>(node_, "compute_path_through_poses");
+
+    // customized
+    talker_server = std::make_unique<DummyActionServer<nav2_msgs::action::DummyBehavior>>(node_, "talker");
     // clang-format on
 }
 
@@ -78,6 +81,9 @@ void ServerHandler::reset() const
     wait_server->reset();
     backup_server->reset();
     drive_on_heading_server->reset();
+
+    // customized
+    talker_server->reset();
 }
 
 void ServerHandler::spinThread()

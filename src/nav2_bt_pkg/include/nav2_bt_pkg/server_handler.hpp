@@ -22,6 +22,7 @@
 #include "nav2_msgs/action/compute_path_through_poses.hpp"
 #include "nav2_msgs/action/compute_path_to_pose.hpp"
 #include "nav2_msgs/action/drive_on_heading.hpp"
+#include "nav2_msgs/action/dummy_behavior.hpp"
 #include "nav2_msgs/action/follow_path.hpp"
 #include "nav2_msgs/action/spin.hpp"
 #include "nav2_msgs/action/wait.hpp"
@@ -94,6 +95,9 @@ class ServerHandler
     std::unique_ptr<DummyActionServer<nav2_msgs::action::BackUp>> backup_server;
     std::unique_ptr<DummyActionServer<nav2_msgs::action::DriveOnHeading>> drive_on_heading_server;
     std::unique_ptr<DummyActionServer<nav2_msgs::action::ComputePathThroughPoses>> ntp_server;
+
+    // customized
+    std::unique_ptr<DummyActionServer<nav2_msgs::action::DummyBehavior>> talker_server;
 
   private:
     void spinThread();
